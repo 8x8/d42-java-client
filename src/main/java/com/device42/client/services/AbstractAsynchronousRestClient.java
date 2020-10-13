@@ -8,6 +8,7 @@ import com.device42.client.services.parameters.EmptyInputParameters;
 import com.device42.client.services.parameters.InputLimitParameters;
 import com.device42.client.services.parameters.InputParameters;
 import com.device42.client.util.Device42ClientException;
+import java.util.concurrent.BlockingQueue;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
@@ -74,7 +75,14 @@ abstract class AbstractAsynchronousRestClient implements Closeable {
             CloseableHttpResponse httpResponse = httpClient.execute(targetHost, requestBuilder.build(), clientContext);
             StatusLine statusLine = httpResponse.getStatusLine();
             if (statusLine.getStatusCode() >= 200 && statusLine.getStatusCode() < 300) {
+
+                //Note this was added to check fof
+                //System.out.println("EntityUtils.toString(httpResponse.getEntity())");
+                //System.out.println(EntityUtils.toString(httpResponse.getEntity()));
                 JSONObject jsonObject = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
+                //System.out.println("jsonObject");
+                //System.out.println(jsonObject);
+
                 return parser.parse(jsonObject);
             } else {
                 String errorMessage = "";
@@ -95,9 +103,11 @@ abstract class AbstractAsynchronousRestClient implements Closeable {
             throw new Device42ClientException("JSON error " + ex.getMessage(), ex);
         }
     }
+
     protected <T> List<T> getAll(String path, JsonObjectListParser<T> parser) {
     	return getAll(path, parser, new EmptyInputParameters());
     }
+
     protected <T> List<T> getAll(String path, JsonObjectListParser<T> parser, InputLimitParameters inputParameters) {
     	List<T> result = get(path, parser, inputParameters);
     	if (result != null && parser.getLimit()> 0 && parser.getCount() > 0 && parser.getCount() > result.size()) {
@@ -110,6 +120,20 @@ abstract class AbstractAsynchronousRestClient implements Closeable {
     	}
     	return result;
     }
+
+    protected <T> void getAllListener(String path, JsonObjectListParser<T> parser, InputLimitParameters inputParameters, RestClientListener<List<T>> listener) {
+        List<T> result = get(path, parser, inputParameters);
+        if (result != null && parser.getLimit()> 0 && parser.getCount() > 0 && parser.getCount() > result.size()) {
+            listener.listen(result);
+            for (int offset = parser.getLimit(); offset < parser.getCount(); offset += parser.getLimit()) {
+                inputParameters.addLimit(parser.getLimit());
+                inputParameters.addOffset(offset);
+                List<T> partialResult = get(path, parser, inputParameters);
+                listener.listen(partialResult);
+            }
+        }
+    }
+
 
     protected int createOrUpdate(String path, Object obj) throws IOException {
 

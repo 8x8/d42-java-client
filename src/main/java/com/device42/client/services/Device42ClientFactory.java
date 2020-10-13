@@ -78,6 +78,10 @@ public class Device42ClientFactory {
         return new ServicesRestClient(baseUrl, createHttpClient(username, password));
     }
 
+    public static SoftwareDetailsRestClient createSoftwareDetailsClient(String baseUrl, String username, String password) {
+        return new SoftwareDetailsRestClient(baseUrl, createHttpClient(username, password));
+    }
+
     public static ApplicationComponentsRestClient createApplicationComponentsRestClient(String baseUrl, String username, String password) {
         return new ApplicationComponentsRestClient(baseUrl, createHttpClient(username, password));
     }

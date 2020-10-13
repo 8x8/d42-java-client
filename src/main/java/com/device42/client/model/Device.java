@@ -1,5 +1,7 @@
 package com.device42.client.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Device {
 	private long id;
 	private String name;
@@ -13,7 +15,13 @@ public class Device {
 	private String uuid;
 	private String rack;
 	private String[] tags;
+	private IpAddress[] ipAddresses;
 	private String customer;
+	private String os;
+	private String osarch;
+	private String osver;
+	private String osverno;
+
 
 	public Device() {
 	}
@@ -26,6 +34,7 @@ public class Device {
 		return hardwareModel;
 	}
 
+	@JsonProperty("device_id")
 	public long getId() {
 		return id;
 	}
@@ -111,7 +120,8 @@ public class Device {
 		return "Device [id=" + id + ", name=" + name + ", hardwareModel=" + hardwareModel + ", serialNo=" + serialNo
 				+ ", assetNo=" + assetNo + ", serviceLevel=" + serviceLevel + ", type=" + type + ", virtualHostName="
 				+ virtualHostName + ", manufacturer=" + manufacturer + ", uuid=" + uuid + ", rack=" + rack
-				+ ", customer=" + customer + ", tags=" + tags + "]";
+				+ ", customer=" + customer + ", tags=" + tags + ", os=" + os + ", osarch=" + osarch + ", osver="
+				+ osver + ", osverno=" + osverno + "]";
 	}
 
 	public String[] getTags() {
@@ -122,11 +132,52 @@ public class Device {
 		this.tags = tags;
 	}
 
+	public IpAddress[] getIpAddresses() {
+		return ipAddresses;
+	}
+
+	@JsonProperty("ip_addresses")
+	public void setIpAddresses(IpAddress[] ipAddresses) {
+		this.ipAddresses = ipAddresses;
+	}
+
 	public String getCustomer() {
 		return customer;
 	}
 
 	public void setCustomer(String customer) {
 		this.customer = customer;
+	}
+
+	public String getOs() {
+		return os;
+	}
+
+	public void setOs(String os) {
+		this.os = os;
+	}
+
+	public String getOsarch() {
+		return osarch;
+	}
+
+	public void setOsarch(String osarch) {
+		this.osarch = osarch;
+	}
+
+	public String getOsver() {
+		return osver;
+	}
+
+	public void setOsver(String osver) {
+		this.osver = osver;
+	}
+
+	public String getOsverno() {
+		return osverno;
+	}
+
+	public void setOsverno(String osverno) {
+		this.osverno = osverno;
 	}
 }

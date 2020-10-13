@@ -33,4 +33,9 @@ public class DevicesRestClient extends AbstractAsynchronousRestClient {
     public List<Device> getAllDevices(DeviceParameters deviceParameters) {
     	return getAll(DEVICE_ALL_PATH, devicesJsonParser, deviceParameters);
     }
+
+    public void getAllDevicesListener(DeviceParameters deviceParameters, RestClientListener<List<Device>> listener) {
+        getAllListener(DEVICE_ALL_PATH, devicesJsonParser, deviceParameters, listener);
+    }
+
 }

@@ -55,7 +55,7 @@ public class DeviceParameters extends AbstractInputLimitParameters {
 
     private List<String> columns;
     private Map<String, String> parameters;
-    
+
 
     private DeviceParameters(
             List<String> columns,
