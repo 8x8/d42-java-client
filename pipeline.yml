@@ -1,0 +1,43 @@
+version: "1.0"
+
+image: docker.8x8.com:5000/8x8/hyperloop/centos7/java11
+
+buildInfo:
+  buildName: d42-java-client
+  buildDescription: d42-java-client
+
+sonar:
+  qgName: d42-java-client
+  projectName: d42-java-client
+  coverageTool: jacoco
+  coverageThreshold: 0
+  blockerIssueThreshold: 50
+  smellsCountThreshold: 5000
+  unitTestSuccessThreshold: 0
+  exclusions: '**/src/test/**,**/src/main/docker/**,**/src/main/resources/templates/**,**/src/main/resources/public/**'
+
+veracode:
+  includeUploadPattern: "target/**.jar"
+  excludeUploadPattern: "src/**/*,**/target/**sources**.jar"
+
+deploy: false
+
+stages:
+  branching:
+    releaseArtifactRegex: ^(master|release|develop).*
+    releaseRepositoryRegex: ^(master|release|develop).*
+  verify:
+    unit:
+    - mvn versions:set -DgenerateBackupPoms=false -DnewVersion=$ART_VERSION
+    - mvn clean install
+    - mvn test -B
+  security:
+    owaspDependencyRegex: "(?!x)x"
+    branch: ^(master|release|develop).*
+    sonarRegex: ^(master|release|develop).*
+    quality:
+    - echo "My quality command"
+  publish:
+    artifact:
+      sh:
+      - mvn -B deploy:deploy-file -DgroupId=com.device42 -DartifactId=d42-java-client -Dversion=$ART_VERSION  -DgeneratePom=true -Dpackaging=jar -DrepositoryId=8x8.repo -Durl=http://192.168.130.48:8081/nexus/content/repositories/$TARGET_REPOSITORY -Dfile=target/d42-java-client-$ART_VERSION.jar
