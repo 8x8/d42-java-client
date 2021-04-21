@@ -12,7 +12,7 @@ sonar:
   coverageTool: jacoco
   coverageThreshold: 0
   blockerIssueThreshold: 50
-  smellsCountThreshold: 5000
+  smellsCountThreshold: 54
   unitTestSuccessThreshold: 0
   exclusions: '**/src/test/**,**/src/main/docker/**,**/src/main/resources/templates/**,**/src/main/resources/public/**'
 
