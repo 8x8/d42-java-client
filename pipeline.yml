@@ -11,6 +11,7 @@ sonar:
   projectName: d42-java-client
   coverageTool: jacoco
   coverageThreshold: 0
+  newCoverageThreshold: 80
   blockerIssueThreshold: 50
   smellsCountThreshold: 54
   unitTestSuccessThreshold: 0
