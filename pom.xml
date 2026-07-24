@@ -25,7 +25,7 @@
   </distributionManagement>
 
   <properties>
-    <jackson.version>2.11.2</jackson.version>
+    <jackson.version>2.18.8</jackson.version>
     <github.global.server>github</github.global.server>
   </properties>
 
